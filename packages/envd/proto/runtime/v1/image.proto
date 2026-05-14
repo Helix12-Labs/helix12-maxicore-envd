@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: <unknown>
+// Reverse-engineered from Manus sandbox-runtime v8.0.2 RAM dump 2026-05-14
+// Source: github.com/manus-ai/manus-sandbox/sbx-go-svc/sdk/go/runtime/v1
+// Method: Extracted protobuf field-tags + SDK getter symbols from RAM segment
+syntax = "proto3";
+
+package runtime.v1;
+
+option go_package = "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/runtime/v1;runtimev1";
+
+// Service: ImageService
+// Methods: 2
+
+service ImageService {
+  rpc RemoveBackground(RemoveBackgroundRequest) returns (RemoveBackgroundResponse);
+  rpc UploadSearchImage(UploadSearchImageRequest) returns (UploadSearchImageResponse);
+}
+
+// === Messages used by ImageService ===
+
+message RemoveBackgroundRequest {
+  string images = 1;  // GetXxx symbol: GetImages
+}
+
+message RemoveBackgroundResponse {
+  string message = 1;  // GetXxx symbol: GetMessage
+  string results = 2;  // GetXxx symbol: GetResults
+  string status = 3;  // GetXxx symbol: GetStatus
+}
+
+message UploadSearchImageRequest {
+  string image_info_list = 1;  // GetXxx symbol: GetImageInfoList
+  string need_upload_image = 2;  // GetXxx symbol: GetNeedUploadImage
+  string thumbnail_image_name = 3;  // GetXxx symbol: GetThumbnailImageName
+  string thumbnail_presigned_url = 4;  // GetXxx symbol: GetThumbnailPresignedUrl
+}
+
+message UploadSearchImageResponse {
+  string message = 1;  // GetXxx symbol: GetMessage
+  string results = 2;  // GetXxx symbol: GetResults
+  string success = 3;  // GetXxx symbol: GetSuccess
+}
+

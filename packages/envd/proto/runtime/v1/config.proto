@@ -1,0 +1,79 @@
+// SPDX-License-Identifier: <unknown>
+// Reverse-engineered from Manus sandbox-runtime v8.0.2 RAM dump 2026-05-14
+// Source: github.com/manus-ai/manus-sandbox/sbx-go-svc/sdk/go/runtime/v1
+// Method: Extracted protobuf field-tags + SDK getter symbols from RAM segment
+syntax = "proto3";
+
+package runtime.v1;
+
+option go_package = "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/runtime/v1;runtimev1";
+
+// Service: ConfigService
+// Methods: 6
+
+service ConfigService {
+  rpc Mount(MountRequest) returns (MountResponse);
+  rpc SetEnv(SetEnvRequest) returns (SetEnvResponse);
+  rpc GetGitHubAuthStatus(GetGitHubAuthStatusRequest) returns (GetGitHubAuthStatusResponse);
+  rpc NekoPreAuth(NekoPreAuthRequest) returns (NekoPreAuthResponse);
+  rpc VNCPreAuth(VNCPreAuthRequest) returns (VNCPreAuthResponse);
+  rpc RefreshTurnToken(RefreshTurnTokenRequest) returns (RefreshTurnTokenResponse);
+}
+
+// === Messages used by ConfigService ===
+
+message MountRequest {
+  string mount_path = 1;  // GetXxx symbol: GetMountPath
+  string ws_url = 2;  // GetXxx symbol: GetWsUrl
+}
+
+message MountResponse {
+  string data = 1;  // GetXxx symbol: GetData
+  string status = 2;  // GetXxx symbol: GetStatus
+}
+
+message SetEnvRequest {
+  string enabled_built_in_mcp = 1;  // GetXxx symbol: GetEnabledBuiltInMcp
+  string secrets = 2;  // GetXxx symbol: GetSecrets
+}
+
+message SetEnvResponse {
+  string configs = 1;  // GetXxx symbol: GetConfigs
+  string github_auth = 2;  // GetXxx symbol: GetGithubAuth
+  string google_drive_auth = 3;  // GetXxx symbol: GetGoogleDriveAuth
+  string status = 4;  // GetXxx symbol: GetStatus
+  string total_variables = 5;  // GetXxx symbol: GetTotalVariables
+}
+
+message GetGitHubAuthStatusRequest {
+}
+
+message GetGitHubAuthStatusResponse {
+  string github_auth = 1;  // GetXxx symbol: GetGithubAuth
+  string status = 2;  // GetXxx symbol: GetStatus
+}
+
+message NekoPreAuthRequest {
+}
+
+message NekoPreAuthResponse {
+  string username = 1;  // GetXxx symbol: GetUsername
+  string webrtc_token = 2;  // GetXxx symbol: GetWebrtcToken
+}
+
+message VNCPreAuthRequest {
+}
+
+message VNCPreAuthResponse {
+  string pre_auth_token = 1;  // GetXxx symbol: GetPreAuthToken
+}
+
+message RefreshTurnTokenRequest {
+  string neko_ice_servers_json = 1;  // GetXxx symbol: GetNekoIceServersJson
+}
+
+message RefreshTurnTokenResponse {
+  string message = 1;  // GetXxx symbol: GetMessage
+  string status = 2;  // GetXxx symbol: GetStatus
+}
+

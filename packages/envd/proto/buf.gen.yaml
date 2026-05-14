@@ -1,0 +1,17 @@
+version: v1
+plugins:
+  - plugin: go
+    out: ../internal/services
+    opt: paths=source_relative
+  - plugin: connect-go
+    out: ../internal/services
+    opt: paths=source_relative
+
+managed:
+  enabled: true
+  optimize_for: SPEED
+  go_package_prefix:
+    default: github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services
+    except:
+      # Don't override our explicit per-file go_package
+      - buf.build/helix12-labs/maxicore-runtime

@@ -1,0 +1,69 @@
+// SPDX-License-Identifier: <unknown>
+// Reverse-engineered from Manus sandbox-runtime v8.0.2 RAM dump 2026-05-14
+// Source: github.com/manus-ai/manus-sandbox/sbx-go-svc/sdk/go/runtime/v1
+// Method: Extracted protobuf field-tags + SDK getter symbols from RAM segment
+syntax = "proto3";
+
+package runtime.v1;
+
+option go_package = "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/runtime/v1;runtimev1";
+
+// Service: BrowserService
+// Methods: 5
+
+service BrowserService {
+  rpc ExecuteBrowserAction(ExecuteBrowserActionRequest) returns (ExecuteBrowserActionResponse);
+  rpc GetBrowserStatus(GetBrowserStatusRequest) returns (GetBrowserStatusResponse);
+  rpc ClearBrowserData(ClearBrowserDataRequest) returns (ClearBrowserDataResponse);
+  rpc NotifyBrowserConfigUpdate(NotifyBrowserConfigUpdateRequest) returns (NotifyBrowserConfigUpdateResponse);
+  rpc RenewPresignedURLs(RenewPresignedURLsRequest) returns (RenewPresignedURLsResponse);
+}
+
+// === Messages used by BrowserService ===
+
+message ExecuteBrowserActionRequest {
+  string action = 1;  // GetXxx symbol: GetAction
+  string clean_screenshot_presigned_url = 2;  // GetXxx symbol: GetCleanScreenshotPresignedUrl
+  string cloudflare_auth_headers = 3;  // GetXxx symbol: GetCloudflareAuthHeaders
+  string screenshot_presigned_url = 4;  // GetXxx symbol: GetScreenshotPresignedUrl
+}
+
+message ExecuteBrowserActionResponse {
+  string error = 1;  // GetXxx symbol: GetError
+  string result = 2;  // GetXxx symbol: GetResult
+  string status = 3;  // GetXxx symbol: GetStatus
+}
+
+message GetBrowserStatusRequest {
+}
+
+message GetBrowserStatusResponse {
+  string error = 1;  // GetXxx symbol: GetError
+  string status = 2;  // GetXxx symbol: GetStatus
+  string tabs = 3;  // GetXxx symbol: GetTabs
+}
+
+message ClearBrowserDataRequest {
+}
+
+message ClearBrowserDataResponse {
+  string success = 1;  // GetXxx symbol: GetSuccess
+}
+
+message NotifyBrowserConfigUpdateRequest {
+  string enable_manus_browser = 1;  // GetXxx symbol: GetEnableManusBrowser
+  string get_url = 2;  // GetXxx symbol: GetGetUrl
+  string put_url = 3;  // GetXxx symbol: GetPutUrl
+}
+
+message NotifyBrowserConfigUpdateResponse {
+  string status = 1;  // GetXxx symbol: GetStatus
+}
+
+message RenewPresignedURLsRequest {
+  string browser_user_data_s3_url = 1;  // GetXxx symbol: GetBrowserUserDataS3Url
+}
+
+message RenewPresignedURLsResponse {
+}
+

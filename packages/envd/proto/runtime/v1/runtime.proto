@@ -1,0 +1,62 @@
+// SPDX-License-Identifier: <unknown>
+// Reverse-engineered from Manus sandbox-runtime v8.0.2 RAM dump 2026-05-14
+// Source: github.com/manus-ai/manus-sandbox/sbx-go-svc/sdk/go/runtime/v1
+// Method: Extracted protobuf field-tags + SDK getter symbols from RAM segment
+syntax = "proto3";
+
+package runtime.v1;
+
+option go_package = "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/runtime/v1;runtimev1";
+
+// Service: RuntimeService
+// Methods: 4
+
+service RuntimeService {
+  rpc InitSandbox(InitSandboxRequest) returns (InitSandboxResponse);
+  rpc GetHealth(GetHealthRequest) returns (GetHealthResponse);
+  rpc GetVersion(GetVersionRequest) returns (GetVersionResponse);
+  rpc HasFuse(HasFuseRequest) returns (HasFuseResponse);
+}
+
+// === Messages used by RuntimeService ===
+
+message InitSandboxRequest {
+  string browser_user_data_s3_url = 1;  // GetXxx symbol: GetBrowserUserDataS3Url
+  string enable_browser_data_sync = 2;  // GetXxx symbol: GetEnableBrowserDataSync
+  string enable_gws_audit = 3;  // GetXxx symbol: GetEnableGwsAudit
+  string neko_ice_servers_json = 4;  // GetXxx symbol: GetNekoIceServersJson
+  string sandbox_id = 5;  // GetXxx symbol: GetSandboxId
+  string secrets = 6;  // GetXxx symbol: GetSecrets
+  string session_id = 7;  // GetXxx symbol: GetSessionId
+  string utc_timestamp = 8;  // GetXxx symbol: GetUtcTimestamp
+}
+
+message InitSandboxResponse {
+  string processed_files = 1;  // GetXxx symbol: GetProcessedFiles
+  string secrets_dir = 2;  // GetXxx symbol: GetSecretsDir
+  string status = 3;  // GetXxx symbol: GetStatus
+}
+
+message GetHealthRequest {
+}
+
+message GetHealthResponse {
+  string status = 1;  // GetXxx symbol: GetStatus
+}
+
+message GetVersionRequest {
+}
+
+message GetVersionResponse {
+  string version = 1;  // GetXxx symbol: GetVersion
+}
+
+message HasFuseRequest {
+}
+
+message HasFuseResponse {
+  string dev_fuse = 1;  // GetXxx symbol: GetDevFuse
+  string has_fuse = 2;  // GetXxx symbol: GetHasFuse
+  string mount_bin = 3;  // GetXxx symbol: GetMountBin
+}
+

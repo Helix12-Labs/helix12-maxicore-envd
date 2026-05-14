@@ -1,0 +1,17 @@
+version: v1
+name: buf.build/helix12-labs/maxicore-runtime
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT
+  except:
+    # Manus uses `runtime.v1` as package name. DEFAULT lint expects
+    # SERVICE_SUFFIX (e.g. RuntimeServiceService) and matching file-naming.
+    # We replicate Manus 1:1, so disable these.
+    - PACKAGE_DIRECTORY_MATCH
+    - SERVICE_SUFFIX
+    - RPC_REQUEST_RESPONSE_UNIQUE
+    - RPC_REQUEST_STANDARD_NAME
+    - RPC_RESPONSE_STANDARD_NAME

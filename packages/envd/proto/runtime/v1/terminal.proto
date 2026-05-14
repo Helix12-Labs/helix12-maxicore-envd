@@ -1,0 +1,51 @@
+// SPDX-License-Identifier: <unknown>
+// Reverse-engineered from Manus sandbox-runtime v8.0.2 RAM dump 2026-05-14
+// Source: github.com/manus-ai/manus-sandbox/sbx-go-svc/sdk/go/runtime/v1
+// Method: Extracted protobuf field-tags + SDK getter symbols from RAM segment
+syntax = "proto3";
+
+package runtime.v1;
+
+option go_package = "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/runtime/v1;runtimev1";
+
+// Service: TerminalService
+// Methods: 5
+
+service TerminalService {
+  rpc View(ViewRequest) returns (ViewResponse);
+  rpc Write(WriteRequest) returns (WriteResponse);
+  rpc Reset(ResetRequest) returns (ResetResponse);
+  rpc ResetAll(ResetAllRequest) returns (ResetAllResponse);
+  rpc KillTerminalProcess(KillTerminalProcessRequest) returns (KillTerminalProcessResponse);
+}
+
+// === Messages used by TerminalService ===
+
+message KillTerminalProcessRequest {
+  string target_device_id = 1;  // GetXxx symbol: GetTargetDeviceId
+  string target_env = 2;  // GetXxx symbol: GetTargetEnv
+  string terminal_id = 3;  // GetXxx symbol: GetTerminalId
+}
+
+message KillTerminalProcessResponse {
+  string output = 1;  // GetXxx symbol: GetOutput
+  string result = 2;  // GetXxx symbol: GetResult
+  string status = 3;  // GetXxx symbol: GetStatus
+  string terminal_id = 4;  // GetXxx symbol: GetTerminalId
+  string terminal_status = 5;  // GetXxx symbol: GetTerminalStatus
+}
+
+
+// === Stub messages (no fields discovered in RAM dump — TBD via E2E tracing) ===
+
+message ViewRequest {}
+message ViewResponse {}
+
+message WriteRequest {}
+message WriteResponse {}
+
+message ResetRequest {}
+message ResetResponse {}
+
+message ResetAllRequest {}
+message ResetAllResponse {}

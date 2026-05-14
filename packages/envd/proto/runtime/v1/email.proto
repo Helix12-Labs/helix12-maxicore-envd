@@ -1,0 +1,104 @@
+// SPDX-License-Identifier: <unknown>
+// Reverse-engineered from Manus sandbox-runtime v8.0.2 RAM dump 2026-05-14
+// Source: github.com/manus-ai/manus-sandbox/sbx-go-svc/sdk/go/runtime/v1
+// Method: Extracted protobuf field-tags + SDK getter symbols from RAM segment
+syntax = "proto3";
+
+package runtime.v1;
+
+option go_package = "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/runtime/v1;runtimev1";
+
+// Service: EmailService
+// Methods: 4
+
+service EmailService {
+  rpc DownloadGmailAttachments(DownloadGmailAttachmentsRequest) returns (DownloadGmailAttachmentsResponse);
+  rpc DownloadOutlookAttachments(DownloadOutlookAttachmentsRequest) returns (DownloadOutlookAttachmentsResponse);
+  rpc SendOrSaveGmailDraft(SendOrSaveGmailDraftRequest) returns (SendOrSaveGmailDraftResponse);
+  rpc SendOrSaveOutlookDraft(SendOrSaveOutlookDraftRequest) returns (SendOrSaveOutlookDraftResponse);
+}
+
+// === Messages used by EmailService ===
+
+message DownloadGmailAttachmentsRequest {
+  string access_token = 1;  // GetXxx symbol: GetAccessToken
+  string attachments = 2;  // GetXxx symbol: GetAttachments
+  string max_workers = 3;  // GetXxx symbol: GetMaxWorkers
+  string output_dir = 4;  // GetXxx symbol: GetOutputDir
+}
+
+message DownloadGmailAttachmentsResponse {
+  string details = 1;  // GetXxx symbol: GetDetails
+  string error = 2;  // GetXxx symbol: GetError
+  string failed_count = 3;  // GetXxx symbol: GetFailedCount
+  string message = 4;  // GetXxx symbol: GetMessage
+  string status = 5;  // GetXxx symbol: GetStatus
+  string success_count = 6;  // GetXxx symbol: GetSuccessCount
+  string total = 7;  // GetXxx symbol: GetTotal
+}
+
+message DownloadOutlookAttachmentsRequest {
+  string message_id = 1;  // GetXxx symbol: GetMessageId
+  string target_path = 2;  // GetXxx symbol: GetTargetPath
+  string token = 3;  // GetXxx symbol: GetToken
+}
+
+message DownloadOutlookAttachmentsResponse {
+  string details = 1;  // GetXxx symbol: GetDetails
+  string downloaded_files = 2;  // GetXxx symbol: GetDownloadedFiles
+  string error = 3;  // GetXxx symbol: GetError
+  string failed_count = 4;  // GetXxx symbol: GetFailedCount
+  string message = 5;  // GetXxx symbol: GetMessage
+  string message_id = 6;  // GetXxx symbol: GetMessageId
+  string status = 7;  // GetXxx symbol: GetStatus
+  string success_count = 8;  // GetXxx symbol: GetSuccessCount
+  string total = 9;  // GetXxx symbol: GetTotal
+}
+
+message SendOrSaveGmailDraftRequest {
+  string access_token = 1;  // GetXxx symbol: GetAccessToken
+  string attachments = 2;  // GetXxx symbol: GetAttachments
+  string bcc = 3;  // GetXxx symbol: GetBcc
+  string cc = 4;  // GetXxx symbol: GetCc
+  string from_email = 5;  // GetXxx symbol: GetFromEmail
+  string from_name = 6;  // GetXxx symbol: GetFromName
+  string reply_to = 7;  // GetXxx symbol: GetReplyTo
+  string save_draft = 8;  // GetXxx symbol: GetSaveDraft
+  string subject = 9;  // GetXxx symbol: GetSubject
+  string text = 10;  // GetXxx symbol: GetText
+  string thread_id = 11;  // GetXxx symbol: GetThreadId
+  string to = 12;  // GetXxx symbol: GetTo
+  string upload_chunk_bytes = 13;  // GetXxx symbol: GetUploadChunkBytes
+}
+
+message SendOrSaveGmailDraftResponse {
+  string draft_id = 1;  // GetXxx symbol: GetDraftId
+  string error = 2;  // GetXxx symbol: GetError
+  string id = 3;  // GetXxx symbol: GetId
+  string message_id = 4;  // GetXxx symbol: GetMessageId
+  string raw_response = 5;  // GetXxx symbol: GetRawResponse
+  string status = 6;  // GetXxx symbol: GetStatus
+  string thread_id = 7;  // GetXxx symbol: GetThreadId
+}
+
+message SendOrSaveOutlookDraftRequest {
+  string attachments = 1;  // GetXxx symbol: GetAttachments
+  string bcc = 2;  // GetXxx symbol: GetBcc
+  string body = 3;  // GetXxx symbol: GetBody
+  string body_type = 4;  // GetXxx symbol: GetBodyType
+  string cc = 5;  // GetXxx symbol: GetCc
+  string importance = 6;  // GetXxx symbol: GetImportance
+  string save_to_draft = 7;  // GetXxx symbol: GetSaveToDraft
+  string save_to_sent_items = 8;  // GetXxx symbol: GetSaveToSentItems
+  string subject = 9;  // GetXxx symbol: GetSubject
+  string to = 10;  // GetXxx symbol: GetTo
+  string token = 11;  // GetXxx symbol: GetToken
+}
+
+message SendOrSaveOutlookDraftResponse {
+  string error = 1;  // GetXxx symbol: GetError
+  string message = 2;  // GetXxx symbol: GetMessage
+  string message_id = 3;  // GetXxx symbol: GetMessageId
+  string status = 4;  // GetXxx symbol: GetStatus
+}
+

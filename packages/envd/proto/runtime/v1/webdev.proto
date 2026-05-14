@@ -1,0 +1,194 @@
+// SPDX-License-Identifier: <unknown>
+// Reverse-engineered from Manus sandbox-runtime v8.0.2 RAM dump 2026-05-14
+// Source: github.com/manus-ai/manus-sandbox/sbx-go-svc/sdk/go/runtime/v1
+// Method: Extracted protobuf field-tags + SDK getter symbols from RAM segment
+syntax = "proto3";
+
+package runtime.v1;
+
+option go_package = "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/runtime/v1;runtimev1";
+
+// Service: WebdevService
+// Methods: 14
+
+service WebdevService {
+  rpc InitProject(InitProjectRequest) returns (InitProjectResponse);
+  rpc UpdateConfig(UpdateConfigRequest) returns (UpdateConfigResponse);
+  rpc GitSyncCheck(GitSyncCheckRequest) returns (GitSyncCheckResponse);
+  rpc RestartProject(RestartProjectRequest) returns (RestartProjectResponse);
+  rpc RestoreProject(RestoreProjectRequest) returns (RestoreProjectResponse);
+  rpc RollbackProject(RollbackProjectRequest) returns (RollbackProjectResponse);
+  rpc ApplyWebpageEdits(ApplyWebpageEditsRequest) returns (ApplyWebpageEditsResponse);
+  rpc DatabaseOperation(DatabaseOperationRequest) returns (DatabaseOperationResponse);
+  rpc RefreshGitHubToken(RefreshGitHubTokenRequest) returns (RefreshGitHubTokenResponse);
+  rpc RefreshS3Token(RefreshS3TokenRequest) returns (RefreshS3TokenResponse);
+  rpc GetProjectStatus(GetProjectStatusRequest) returns (GetProjectStatusResponse);
+  rpc GitPush(GitPushRequest) returns (GitPushResponse);
+  rpc SetupImportedTemplate(SetupImportedTemplateRequest) returns (SetupImportedTemplateResponse);
+  rpc SaveCheckpoint(SaveCheckpointRequest) returns (SaveCheckpointResponse);
+}
+
+// === Messages used by WebdevService ===
+
+message InitProjectRequest {
+  string capabilities = 1;  // GetXxx symbol: GetCapabilities
+  string checkpoint_zip_upload_url = 2;  // GetXxx symbol: GetCheckpointZipUploadUrl
+  string checkpoint_zip_url = 3;  // GetXxx symbol: GetCheckpointZipUrl
+  string env_vars = 4;  // GetXxx symbol: GetEnvVars
+  string experiments = 5;  // GetXxx symbol: GetExperiments
+  string platform = 6;  // GetXxx symbol: GetPlatform
+  string project_config = 7;  // GetXxx symbol: GetProjectConfig
+  string project_name = 8;  // GetXxx symbol: GetProjectName
+  string project_title = 9;  // GetXxx symbol: GetProjectTitle
+  string project_type = 10;  // GetXxx symbol: GetProjectType
+  string source_checkpoint_zip_url = 11;  // GetXxx symbol: GetSourceCheckpointZipUrl
+  string source_git_repo = 12;  // GetXxx symbol: GetSourceGitRepo
+  string template_id = 13;  // GetXxx symbol: GetTemplateId
+  string template_prompt = 14;  // GetXxx symbol: GetTemplatePrompt
+}
+
+message InitProjectResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
+message UpdateConfigRequest {
+  string build_command = 1;  // GetXxx symbol: GetBuildCommand
+  string capabilities = 2;  // GetXxx symbol: GetCapabilities
+  string dev_command = 3;  // GetXxx symbol: GetDevCommand
+  string env_vars = 4;  // GetXxx symbol: GetEnvVars
+  string git_remote = 5;  // GetXxx symbol: GetGitRemote
+  string port = 6;  // GetXxx symbol: GetPort
+  string presigned_upload_url = 7;  // GetXxx symbol: GetPresignedUploadUrl
+  string project_config = 8;  // GetXxx symbol: GetProjectConfig
+  string project_name = 9;  // GetXxx symbol: GetProjectName
+  string secrets = 10;  // GetXxx symbol: GetSecrets
+  string template_overrides = 11;  // GetXxx symbol: GetTemplateOverrides
+  string test_command = 12;  // GetXxx symbol: GetTestCommand
+}
+
+message UpdateConfigResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
+message GitSyncCheckRequest {
+  string project_config = 1;  // GetXxx symbol: GetProjectConfig
+  string project_name = 2;  // GetXxx symbol: GetProjectName
+}
+
+message GitSyncCheckResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
+message RestartProjectRequest {
+  string presigned_upload_url = 1;  // GetXxx symbol: GetPresignedUploadUrl
+  string project_config = 2;  // GetXxx symbol: GetProjectConfig
+  string project_name = 3;  // GetXxx symbol: GetProjectName
+}
+
+message RestartProjectResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
+message RestoreProjectRequest {
+  string capabilities = 1;  // GetXxx symbol: GetCapabilities
+  string experiments = 2;  // GetXxx symbol: GetExperiments
+  string platform = 3;  // GetXxx symbol: GetPlatform
+  string project_config = 4;  // GetXxx symbol: GetProjectConfig
+  string project_name = 5;  // GetXxx symbol: GetProjectName
+}
+
+message RestoreProjectResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
+message RollbackProjectRequest {
+  string checkpoint_zip_upload_url = 1;  // GetXxx symbol: GetCheckpointZipUploadUrl
+  string checkpoint_zip_url = 2;  // GetXxx symbol: GetCheckpointZipUrl
+  string project_config = 3;  // GetXxx symbol: GetProjectConfig
+  string project_name = 4;  // GetXxx symbol: GetProjectName
+  string version_id = 5;  // GetXxx symbol: GetVersionId
+}
+
+message RollbackProjectResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
+message ApplyWebpageEditsRequest {
+  string edits_by_file_path = 1;  // GetXxx symbol: GetEditsByFilePath
+}
+
+message ApplyWebpageEditsResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
+message DatabaseOperationRequest {
+  string operation = 1;  // GetXxx symbol: GetOperation
+  string project_config = 2;  // GetXxx symbol: GetProjectConfig
+  string project_name = 3;  // GetXxx symbol: GetProjectName
+  string query = 4;  // GetXxx symbol: GetQuery
+}
+
+message DatabaseOperationResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
+message RefreshGitHubTokenRequest {
+  string user_git_repo = 1;  // GetXxx symbol: GetUserGitRepo
+}
+
+message RefreshGitHubTokenResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
+message RefreshS3TokenRequest {
+  string s3_config = 1;  // GetXxx symbol: GetS3Config
+}
+
+message RefreshS3TokenResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
+message GetProjectStatusRequest {
+  string presigned_upload_url = 1;  // GetXxx symbol: GetPresignedUploadUrl
+  string project_config = 2;  // GetXxx symbol: GetProjectConfig
+  string project_name = 3;  // GetXxx symbol: GetProjectName
+}
+
+message GetProjectStatusResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
+message GitPushRequest {
+  string project_config = 1;  // GetXxx symbol: GetProjectConfig
+  string project_name = 2;  // GetXxx symbol: GetProjectName
+}
+
+message GitPushResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
+message SetupImportedTemplateRequest {
+  string template_id = 1;  // GetXxx symbol: GetTemplateId
+}
+
+message SetupImportedTemplateResponse {
+  string applied_templates = 1;  // GetXxx symbol: GetAppliedTemplates
+  string error = 2;  // GetXxx symbol: GetError
+  string message = 3;  // GetXxx symbol: GetMessage
+  string success = 4;  // GetXxx symbol: GetSuccess
+}
+
+message SaveCheckpointRequest {
+  string checkpoint_zip_upload_url = 1;  // GetXxx symbol: GetCheckpointZipUploadUrl
+  string checkpoint_zip_url = 2;  // GetXxx symbol: GetCheckpointZipUrl
+  string description = 3;  // GetXxx symbol: GetDescription
+  string last_checkpoint_commit = 4;  // GetXxx symbol: GetLastCheckpointCommit
+  string project_config = 5;  // GetXxx symbol: GetProjectConfig
+  string project_name = 6;  // GetXxx symbol: GetProjectName
+  string timeout = 7;  // GetXxx symbol: GetTimeout
+}
+
+message SaveCheckpointResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
