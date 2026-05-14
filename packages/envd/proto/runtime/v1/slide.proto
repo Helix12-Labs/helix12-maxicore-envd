@@ -1,0 +1,95 @@
+// SPDX-License-Identifier: <unknown>
+// Reverse-engineered from Manus sandbox-runtime v8.0.2 RAM dump 2026-05-14
+// Source: github.com/manus-ai/manus-sandbox/sbx-go-svc/sdk/go/runtime/v1
+// Method: Extracted protobuf field-tags + SDK getter symbols from RAM segment
+syntax = "proto3";
+
+package runtime.v1;
+
+option go_package = "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/runtime/v1;runtimev1";
+
+// Service: SlideService
+// Methods: 7
+
+service SlideService {
+  rpc InitSlideProject(InitSlideProjectRequest) returns (InitSlideProjectResponse);
+  rpc ModifySlide(ModifySlideRequest) returns (ModifySlideResponse);
+  rpc PresentSlide(PresentSlideRequest) returns (PresentSlideResponse);
+  rpc FetchSlideNotes(FetchSlideNotesRequest) returns (FetchSlideNotesResponse);
+  rpc UpdateSlide(UpdateSlideRequest) returns (UpdateSlideResponse);
+  rpc UploadSlide(UploadSlideRequest) returns (UploadSlideResponse);
+  rpc UploadSlideTemplate(UploadSlideTemplateRequest) returns (UploadSlideTemplateResponse);
+}
+
+// === Messages used by SlideService ===
+
+message InitSlideProjectRequest {
+  string directory = 1;  // GetXxx symbol: GetDirectory
+  string main_title = 2;  // GetXxx symbol: GetMainTitle
+  string outline = 3;  // GetXxx symbol: GetOutline
+}
+
+message InitSlideProjectResponse {
+  string error = 1;  // GetXxx symbol: GetError
+  string message = 2;  // GetXxx symbol: GetMessage
+  string success = 3;  // GetXxx symbol: GetSuccess
+}
+
+message ModifySlideRequest {
+  string operation = 1;  // GetXxx symbol: GetOperation
+  string project_dir = 2;  // GetXxx symbol: GetProjectDir
+  string slide_data = 3;  // GetXxx symbol: GetSlideData
+}
+
+message ModifySlideResponse {
+  string error = 1;  // GetXxx symbol: GetError
+  string message = 2;  // GetXxx symbol: GetMessage
+  string outline = 3;  // GetXxx symbol: GetOutline
+  string results = 4;  // GetXxx symbol: GetResults
+  string success = 5;  // GetXxx symbol: GetSuccess
+}
+
+message PresentSlideRequest {
+  string directory = 1;  // GetXxx symbol: GetDirectory
+  string notes_file_path = 2;  // GetXxx symbol: GetNotesFilePath
+  string outline = 3;  // GetXxx symbol: GetOutline
+  string s3_url = 4;  // GetXxx symbol: GetS3Url
+  string slide_ids = 5;  // GetXxx symbol: GetSlideIds
+  string title = 6;  // GetXxx symbol: GetTitle
+  string version_id = 7;  // GetXxx symbol: GetVersionId
+}
+
+message PresentSlideResponse {
+  string error = 1;  // GetXxx symbol: GetError
+  string json_data = 2;  // GetXxx symbol: GetJsonData
+  string message = 3;  // GetXxx symbol: GetMessage
+  string success = 4;  // GetXxx symbol: GetSuccess
+}
+
+message FetchSlideNotesRequest {
+  string notes_file_path = 1;  // GetXxx symbol: GetNotesFilePath
+  string outline = 2;  // GetXxx symbol: GetOutline
+  string project_dir = 3;  // GetXxx symbol: GetProjectDir
+  string slide_content_file_path = 4;  // GetXxx symbol: GetSlideContentFilePath
+  string slide_indexes = 5;  // GetXxx symbol: GetSlideIndexes
+}
+
+message FetchSlideNotesResponse {
+  string error = 1;  // GetXxx symbol: GetError
+  string existing_notes = 2;  // GetXxx symbol: GetExistingNotes
+  string slide_content_markdown = 3;  // GetXxx symbol: GetSlideContentMarkdown
+  string slides = 4;  // GetXxx symbol: GetSlides
+  string success = 5;  // GetXxx symbol: GetSuccess
+}
+
+
+// === Stub messages (no fields discovered in RAM dump — TBD via E2E tracing) ===
+
+message UpdateSlideRequest {}
+message UpdateSlideResponse {}
+
+message UploadSlideRequest {}
+message UploadSlideResponse {}
+
+message UploadSlideTemplateRequest {}
+message UploadSlideTemplateResponse {}

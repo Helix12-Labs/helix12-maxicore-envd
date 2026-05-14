@@ -1,0 +1,169 @@
+// SPDX-License-Identifier: <unknown>
+// Reverse-engineered from Manus sandbox-runtime v8.0.2 RAM dump 2026-05-14
+// Source: github.com/manus-ai/manus-sandbox/sbx-go-svc/sdk/go/runtime/v1
+// Method: Extracted protobuf field-tags + SDK getter symbols from RAM segment
+syntax = "proto3";
+
+package runtime.v1;
+
+option go_package = "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/runtime/v1;runtimev1";
+
+// Service: FileService
+// Methods: 11
+
+service FileService {
+  rpc DownloadFile(DownloadFileRequest) returns (DownloadFileResponse);
+  rpc BatchReadFiles(BatchReadFilesRequest) returns (BatchReadFilesResponse);
+  rpc CheckFilesExist(CheckFilesExistRequest) returns (CheckFilesExistResponse);
+  rpc CheckFilesExistAbs(CheckFilesExistAbsRequest) returns (CheckFilesExistAbsResponse);
+  rpc MultipartUpload(MultipartUploadRequest) returns (MultipartUploadResponse);
+  rpc UploadFileToS3(UploadFileToS3Request) returns (UploadFileToS3Response);
+  rpc UploadFilesToS3(UploadFilesToS3Request) returns (UploadFilesToS3Response);
+  rpc UploadSlideTemplateImage(UploadSlideTemplateImageRequest) returns (UploadSlideTemplateImageResponse);
+  rpc StoreParallelTasksResult(StoreParallelTasksResultRequest) returns (StoreParallelTasksResultResponse);
+  rpc DownloadAttachments(DownloadAttachmentsRequest) returns (DownloadAttachmentsResponse);
+  rpc DownloadUserEdited(DownloadUserEditedRequest) returns (DownloadUserEditedResponse);
+}
+
+// === Messages used by FileService ===
+
+message DownloadFileRequest {
+  string path = 1;  // GetXxx symbol: GetPath
+}
+
+message DownloadFileResponse {
+  string content_type = 1;  // GetXxx symbol: GetContentType
+  string data = 2;  // GetXxx symbol: GetData
+  string file_name = 3;  // GetXxx symbol: GetFileName
+}
+
+message BatchReadFilesRequest {
+  string file_paths = 1;  // GetXxx symbol: GetFilePaths
+  string max_context_chars = 2;  // GetXxx symbol: GetMaxContextChars
+  string max_files = 3;  // GetXxx symbol: GetMaxFiles
+  string no_truncate = 4;  // GetXxx symbol: GetNoTruncate
+}
+
+message BatchReadFilesResponse {
+  string files = 1;  // GetXxx symbol: GetFiles
+  string files_read = 2;  // GetXxx symbol: GetFilesRead
+  string files_skipped = 3;  // GetXxx symbol: GetFilesSkipped
+  string status = 4;  // GetXxx symbol: GetStatus
+  string total_chars = 5;  // GetXxx symbol: GetTotalChars
+}
+
+message CheckFilesExistRequest {
+  string filepaths = 1;  // GetXxx symbol: GetFilepaths
+}
+
+message CheckFilesExistResponse {
+  string not_file_paths = 1;  // GetXxx symbol: GetNotFilePaths
+  string success = 2;  // GetXxx symbol: GetSuccess
+  string unexisting_paths = 3;  // GetXxx symbol: GetUnexistingPaths
+}
+
+message CheckFilesExistAbsRequest {
+  string filepaths = 1;  // GetXxx symbol: GetFilepaths
+}
+
+message CheckFilesExistAbsResponse {
+  string existing_files = 1;  // GetXxx symbol: GetExistingFiles
+  string not_file_paths = 2;  // GetXxx symbol: GetNotFilePaths
+  string success = 3;  // GetXxx symbol: GetSuccess
+  string unexisting_paths = 4;  // GetXxx symbol: GetUnexistingPaths
+}
+
+message MultipartUploadRequest {
+  string file_path = 1;  // GetXxx symbol: GetFilePath
+  string part_size = 2;  // GetXxx symbol: GetPartSize
+  string presigned_urls = 3;  // GetXxx symbol: GetPresignedUrls
+}
+
+message MultipartUploadResponse {
+  string failed_parts = 1;  // GetXxx symbol: GetFailedParts
+  string file_name = 2;  // GetXxx symbol: GetFileName
+  string message = 3;  // GetXxx symbol: GetMessage
+  string parts_results = 4;  // GetXxx symbol: GetPartsResults
+  string status = 5;  // GetXxx symbol: GetStatus
+  string successful_parts = 6;  // GetXxx symbol: GetSuccessfulParts
+}
+
+message UploadFileToS3Request {
+  string file_path = 1;  // GetXxx symbol: GetFilePath
+  string file_type = 2;  // GetXxx symbol: GetFileType
+  string presigned_url = 3;  // GetXxx symbol: GetPresignedUrl
+}
+
+message UploadFileToS3Response {
+  string content_type = 1;  // GetXxx symbol: GetContentType
+  string estimated_parts = 2;  // GetXxx symbol: GetEstimatedParts
+  string file_name = 3;  // GetXxx symbol: GetFileName
+  string file_path = 4;  // GetXxx symbol: GetFilePath
+  string file_size = 5;  // GetXxx symbol: GetFileSize
+  string message = 6;  // GetXxx symbol: GetMessage
+  string recommended_part_size = 7;  // GetXxx symbol: GetRecommendedPartSize
+  string requires_multipart = 8;  // GetXxx symbol: GetRequiresMultipart
+  string status = 9;  // GetXxx symbol: GetStatus
+  string upload_result = 10;  // GetXxx symbol: GetUploadResult
+}
+
+message UploadFilesToS3Request {
+  string files = 1;  // GetXxx symbol: GetFiles
+}
+
+message UploadFilesToS3Response {
+  string files = 1;  // GetXxx symbol: GetFiles
+  string message = 2;  // GetXxx symbol: GetMessage
+  string status = 3;  // GetXxx symbol: GetStatus
+}
+
+message UploadSlideTemplateImageRequest {
+  string s3_url = 1;  // GetXxx symbol: GetS3Url
+}
+
+message UploadSlideTemplateImageResponse {
+  string error = 1;  // GetXxx symbol: GetError
+  string message = 2;  // GetXxx symbol: GetMessage
+  string success = 3;  // GetXxx symbol: GetSuccess
+}
+
+message StoreParallelTasksResultRequest {
+  string output_schema = 1;  // GetXxx symbol: GetOutputSchema
+  string path = 2;  // GetXxx symbol: GetPath
+  string tasks = 3;  // GetXxx symbol: GetTasks
+  string title = 4;  // GetXxx symbol: GetTitle
+}
+
+message StoreParallelTasksResultResponse {
+  string message = 1;  // GetXxx symbol: GetMessage
+  string status = 2;  // GetXxx symbol: GetStatus
+}
+
+message DownloadAttachmentsRequest {
+  string files = 1;  // GetXxx symbol: GetFiles
+  string folder = 2;  // GetXxx symbol: GetFolder
+  string path = 3;  // GetXxx symbol: GetPath
+}
+
+message DownloadAttachmentsResponse {
+  string fail_count = 1;  // GetXxx symbol: GetFailCount
+  string results = 2;  // GetXxx symbol: GetResults
+  string status = 3;  // GetXxx symbol: GetStatus
+  string success_abs_paths = 4;  // GetXxx symbol: GetSuccessAbsPaths
+  string success_count = 5;  // GetXxx symbol: GetSuccessCount
+  string total = 6;  // GetXxx symbol: GetTotal
+}
+
+message DownloadUserEditedRequest {
+  string files = 1;  // GetXxx symbol: GetFiles
+}
+
+message DownloadUserEditedResponse {
+  string fail_count = 1;  // GetXxx symbol: GetFailCount
+  string results = 2;  // GetXxx symbol: GetResults
+  string status = 3;  // GetXxx symbol: GetStatus
+  string success_abs_paths = 4;  // GetXxx symbol: GetSuccessAbsPaths
+  string success_count = 5;  // GetXxx symbol: GetSuccessCount
+  string total = 6;  // GetXxx symbol: GetTotal
+}
+

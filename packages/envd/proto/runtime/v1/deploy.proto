@@ -1,0 +1,65 @@
+// SPDX-License-Identifier: <unknown>
+// Reverse-engineered from Manus sandbox-runtime v8.0.2 RAM dump 2026-05-14
+// Source: github.com/manus-ai/manus-sandbox/sbx-go-svc/sdk/go/runtime/v1
+// Method: Extracted protobuf field-tags + SDK getter symbols from RAM segment
+syntax = "proto3";
+
+package runtime.v1;
+
+option go_package = "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/runtime/v1;runtimev1";
+
+// Service: DeployService
+// Methods: 4
+
+service DeployService {
+  rpc CreateWebdevProject(CreateWebdevProjectRequest) returns (CreateWebdevProjectResponse);
+  rpc ZipAndUpload(ZipAndUploadRequest) returns (ZipAndUploadResponse);
+  rpc SwitchVersion(SwitchVersionRequest) returns (SwitchVersionResponse);
+}
+
+// === Messages used by DeployService ===
+
+message CreateWebdevProjectRequest {
+  string app_name = 1;  // GetXxx symbol: GetAppName
+  string directory = 2;  // GetXxx symbol: GetDirectory
+  string template_id = 3;  // GetXxx symbol: GetTemplateId
+}
+
+message CreateWebdevProjectResponse {
+  string error = 1;  // GetXxx symbol: GetError
+  string message = 2;  // GetXxx symbol: GetMessage
+  string project_path = 3;  // GetXxx symbol: GetProjectPath
+  string status = 4;  // GetXxx symbol: GetStatus
+  string template_used = 5;  // GetXxx symbol: GetTemplateUsed
+  string version = 6;  // GetXxx symbol: GetVersion
+}
+
+message ZipAndUploadRequest {
+  string directory = 1;  // GetXxx symbol: GetDirectory
+  string project_type = 2;  // GetXxx symbol: GetProjectType
+  string session_id = 3;  // GetXxx symbol: GetSessionId
+  string upload_url = 4;  // GetXxx symbol: GetUploadUrl
+}
+
+message ZipAndUploadResponse {
+  string branch_name = 1;  // GetXxx symbol: GetBranchName
+  string commit_hash = 2;  // GetXxx symbol: GetCommitHash
+  string error = 3;  // GetXxx symbol: GetError
+  string message = 4;  // GetXxx symbol: GetMessage
+  string python_native_packages = 5;  // GetXxx symbol: GetPythonNativePackages
+  string status = 6;  // GetXxx symbol: GetStatus
+}
+
+message SwitchVersionRequest {
+  string directory = 1;  // GetXxx symbol: GetDirectory
+  string target_branch = 2;  // GetXxx symbol: GetTargetBranch
+}
+
+message SwitchVersionResponse {
+  string current_branch = 1;  // GetXxx symbol: GetCurrentBranch
+  string error = 2;  // GetXxx symbol: GetError
+  string message = 3;  // GetXxx symbol: GetMessage
+  string stash_id = 4;  // GetXxx symbol: GetStashId
+  string status = 5;  // GetXxx symbol: GetStatus
+}
+

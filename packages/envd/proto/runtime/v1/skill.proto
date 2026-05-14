@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: <unknown>
+// Reverse-engineered from Manus sandbox-runtime v8.0.2 RAM dump 2026-05-14
+// Source: github.com/manus-ai/manus-sandbox/sbx-go-svc/sdk/go/runtime/v1
+// Method: Extracted protobuf field-tags + SDK getter symbols from RAM segment
+syntax = "proto3";
+
+package runtime.v1;
+
+option go_package = "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/runtime/v1;runtimev1";
+
+// Service: SkillService
+// Methods: 2
+
+service SkillService {
+  rpc PackageSkill(PackageSkillRequest) returns (PackageSkillResponse);
+  rpc SyncSkills(SyncSkillsRequest) returns (SyncSkillsResponse);
+}
+
+// === Messages used by SkillService ===
+
+message PackageSkillRequest {
+  string skill_name = 1;  // GetXxx symbol: GetSkillName
+}
+
+message PackageSkillResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
+message SyncSkillsRequest {
+  string skills_info = 1;  // GetXxx symbol: GetSkillsInfo
+}
+
+message SyncSkillsResponse {
+  string data = 1;  // GetXxx symbol: GetData
+}
+
