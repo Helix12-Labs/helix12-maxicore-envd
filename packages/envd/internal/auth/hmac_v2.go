@@ -9,7 +9,8 @@
 //     (skip timestamp window for long-running ops e.g. SaveCheckpoint).
 //
 // Source scaffold: /home/xeno/projekte/Manus_Dump/05_neuer_dump_2026-05-14/
-//                  08_ram_dump/analysis/reverse_engineering/scaffold/auth_middleware.go
+//
+//	08_ram_dump/analysis/reverse_engineering/scaffold/auth_middleware.go
 package auth
 
 import (
