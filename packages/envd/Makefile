@@ -2,7 +2,14 @@ ENV := $(shell cat ../../.last_used_env || echo "not-set")
 -include ../../.env.${ENV}
 
 BUILD := $(shell git rev-parse --short HEAD)
-LDFLAGS=-ldflags "-X=main.commitSHA=$(BUILD)"
+# Version may be overridden at build-time: `make build VERSION=0.9.0-foo`.
+# Default reads the literal from pkg/version.go so a source-only bump
+# automatically propagates without remembering to also update the Makefile.
+# Build-metadata is the git-short-SHA, e.g. "0.8.0-b.ii.1d-wire+abc1234"
+# (B.II.1d-wire-version-bump 2026-05-14 — bugbot-forensik P2).
+VERSION ?= $(shell sed -n 's/^var Version = "\(.*\)"/\1/p' pkg/version.go)
+VERSION_WITH_META := $(VERSION)+$(BUILD)
+LDFLAGS=-ldflags "-X=main.commitSHA=$(BUILD) -X=github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/pkg.Version=$(VERSION_WITH_META)"
 
 AWS_BUCKET_PREFIX ?= $(PREFIX)$(AWS_ACCOUNT_ID)-
 GCP_BUCKET_PREFIX ?= $(GCP_PROJECT_ID)-
