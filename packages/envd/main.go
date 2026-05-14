@@ -15,8 +15,10 @@ import (
 	connectcors "connectrpc.com/cors"
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/cors"
+	"github.com/rs/zerolog"
 
 	"github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/api"
+	"github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/auth"
 	"github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/execcontext"
 	"github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/host"
 	"github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/logs"
@@ -25,7 +27,9 @@ import (
 	"github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/cgroups"
 	filesystemRpc "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/filesystem"
 	processRpc "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/process"
+	runtimeRpc "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/runtime"
 	processSpec "github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/spec/process"
+	"github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/services/webdev"
 	"github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/internal/utils"
 	"github.com/Helix12-Labs/helix12-maxicore-envd/packages/envd/pkg"
 	"github.com/Helix12-Labs/helix12-maxicore-envd/packages/shared/pkg/httpserver"
@@ -187,6 +191,41 @@ func main() {
 	processLogger := l.With().Str("logger", "process").Logger()
 	processService := processRpc.Handle(m, &processLogger, defaults, cgroupManager)
 
+	// --- B.II.1d-wire: mount runtime.v1.* Connect-RPC surface (Manus 1:1) ---
+	//
+	// HMAC-V2 secret resolution order:
+	//   1. env MAXICORE_SANDBOX_SECRET (typically injected by sandbox-manager)
+	//   2. /etc/maxicore/sandbox-secret (0600, written by initramfs)
+	// If neither source provides a non-empty secret, runtime.Mount is skipped
+	// with a warning — envd remains usable for e2b legacy clients but the
+	// runtime.v1 RPC surface is offline. Production deployments MUST provide
+	// the secret.
+	runtimeLogger := l.With().Str("logger", "runtime-rpc").Logger()
+	hmacSecret := readSandboxSecret(&runtimeLogger)
+	if len(hmacSecret) > 0 {
+		webdevSvc, err := webdev.NewService(webdev.Config{Logger: &runtimeLogger})
+		if err != nil {
+			runtimeLogger.Error().Err(err).Msg("webdev.NewService failed; runtime.v1 surface NOT mounted")
+		} else {
+			authMw := auth.NewMiddleware(hmacSecret, 60*time.Second)
+			mounted, err := runtimeRpc.Mount(m, &runtimeRpc.Deps{
+				Auth:      authMw,
+				WebdevSvc: webdevSvc,
+				Version:   pkg.Version,
+			})
+			if err != nil {
+				runtimeLogger.Error().Err(err).Msg("runtime.Mount failed; runtime.v1 surface NOT mounted")
+			} else {
+				runtimeLogger.Info().
+					Int("services", len(mounted)).
+					Strs("paths", mounted).
+					Msg("runtime.v1 Connect-RPC surface mounted with HMAC-V2 auth")
+			}
+		}
+	} else {
+		runtimeLogger.Warn().Msg("MAXICORE_SANDBOX_SECRET not set; runtime.v1 surface NOT mounted (legacy-only mode)")
+	}
+
 	service := api.New(&envLogger, defaults, mmdsChan, isNotFC)
 	handler := api.HandlerFromMux(service, m)
 	middleware := authn.NewMiddleware(permissions.AuthenticateUsername)
@@ -241,6 +280,30 @@ func main() {
 	if err != nil {
 		log.Fatalf("error starting server: %v", err)
 	}
+}
+
+// readSandboxSecret resolves the HMAC-V2 secret used by runtime.v1 auth.
+// Returns nil (no secret) on any failure; main.go warns and skips mount.
+func readSandboxSecret(logger *zerolog.Logger) []byte {
+	if env := os.Getenv("MAXICORE_SANDBOX_SECRET"); env != "" {
+		return []byte(env)
+	}
+	const secretPath = "/etc/maxicore/sandbox-secret"
+	data, err := os.ReadFile(secretPath)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			logger.Warn().Err(err).Str("path", secretPath).Msg("readSandboxSecret: stat failed")
+		}
+		return nil
+	}
+	// Trim trailing newline if present (file-based secrets often have one)
+	for len(data) > 0 && (data[len(data)-1] == '\n' || data[len(data)-1] == '\r') {
+		data = data[:len(data)-1]
+	}
+	if len(data) == 0 {
+		return nil
+	}
+	return data
 }
 
 func createCgroupManager() (m cgroups.Manager) {
