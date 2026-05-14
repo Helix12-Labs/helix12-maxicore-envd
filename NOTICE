@@ -1,0 +1,29 @@
+MaxiCore envd
+Copyright 2026 Helix12 Labs (HELIX_12)
+
+This product includes software developed at e2b Inc.
+Copyright 2023-2026 e2b Inc.
+Original source: https://github.com/e2b-dev/infra/tree/main/packages/envd
+Licensed under the Apache License, Version 2.0.
+
+The source code in packages/envd/ and packages/shared/ is forked from
+e2b-dev/infra (commit 7f3e661c8c1da50c3be5f34ca502c4f2fbe7d4c4, 2026-05-14)
+and modified for MaxiCore by Helix12 Labs.
+
+Modifications include:
+- Module path renamed from github.com/e2b-dev/infra/packages/* to
+  github.com/Helix12-Labs/helix12-maxicore-envd/packages/*
+- Subset extraction (envd + 6 shared/pkg dependencies: filesystem, httpserver,
+  id, keys, smap, utils — orchestrator + other packages excluded)
+- MaxiCore-specific build pipeline (Docker + GitHub Actions)
+- MaxiCore-specific systemd unit (envd.service)
+- MaxiCore-specific MMDS integration via sandbox-manager
+
+Files modified for MaxiCore have a "Modified by Helix12-Labs YYYY-MM-DD" comment
+in their header. Unmodified files retain their original e2b copyright headers
+unchanged.
+
+The Apache License, Version 2.0 is included in the LICENSE file.
+
+Third-party dependencies are listed in packages/envd/go.mod and
+packages/shared/go.mod. Each dependency is governed by its own license.
