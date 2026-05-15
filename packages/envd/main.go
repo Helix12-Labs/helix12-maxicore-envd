@@ -201,29 +201,33 @@ func main() {
 	// runtime.v1 RPC surface is offline. Production deployments MUST provide
 	// the secret.
 	runtimeLogger := l.With().Str("logger", "runtime-rpc").Logger()
-	hmacSecret := readSandboxSecret(&runtimeLogger)
-	if len(hmacSecret) > 0 {
-		webdevSvc, err := webdev.NewService(webdev.Config{Logger: &runtimeLogger})
-		if err != nil {
-			runtimeLogger.Error().Err(err).Msg("webdev.NewService failed; runtime.v1 surface NOT mounted")
-		} else {
-			authMw := auth.NewMiddleware(hmacSecret, 60*time.Second)
-			mounted, err := runtimeRpc.Mount(m, &runtimeRpc.Deps{
-				Auth:      authMw,
-				WebdevSvc: webdevSvc,
-				Version:   pkg.Version,
-			})
-			if err != nil {
-				runtimeLogger.Error().Err(err).Msg("runtime.Mount failed; runtime.v1 surface NOT mounted")
-			} else {
-				runtimeLogger.Info().
-					Int("services", len(mounted)).
-					Strs("paths", mounted).
-					Msg("runtime.v1 Connect-RPC surface mounted with HMAC-V2 auth")
-			}
-		}
+	webdevSvc, err := webdev.NewService(webdev.Config{Logger: &runtimeLogger})
+	if err != nil {
+		runtimeLogger.Error().Err(err).Msg("webdev.NewService failed; runtime.v1 surface NOT mounted")
 	} else {
-		runtimeLogger.Warn().Msg("MAXICORE_SANDBOX_SECRET not set; runtime.v1 surface NOT mounted (legacy-only mode)")
+		// runtime.v1 is ALWAYS mounted. The HMAC secret is resolved lazily on
+		// first request via readSandboxSecret (B.II.2.B Sprint-14 forensik fix):
+		// e2b TemplateCreate snapshots envd's running state during template-build
+		// — a startup-only secret read froze envd in legacy-only mode after
+		// resume even though /etc/maxicore/sandbox-secret was present. Lazy
+		// resolution makes the rootfs file / e2b /init env take effect
+		// post-resume. Requests before the secret resolves get 401, not 404.
+		authMw := auth.NewMiddlewareLazy(func() []byte {
+			return readSandboxSecret(&runtimeLogger)
+		}, 60*time.Second)
+		mounted, err := runtimeRpc.Mount(m, &runtimeRpc.Deps{
+			Auth:      authMw,
+			WebdevSvc: webdevSvc,
+			Version:   pkg.Version,
+		})
+		if err != nil {
+			runtimeLogger.Error().Err(err).Msg("runtime.Mount failed; runtime.v1 surface NOT mounted")
+		} else {
+			runtimeLogger.Info().
+				Int("services", len(mounted)).
+				Strs("paths", mounted).
+				Msg("runtime.v1 Connect-RPC surface mounted (lazy HMAC-V2 secret)")
+		}
 	}
 
 	service := api.New(&envLogger, defaults, mmdsChan, isNotFC)
@@ -276,8 +280,7 @@ func main() {
 
 	go portScanner.ScanAndBroadcast()
 
-	err := s.ListenAndServe()
-	if err != nil {
+	if err := s.ListenAndServe(); err != nil {
 		log.Fatalf("error starting server: %v", err)
 	}
 }

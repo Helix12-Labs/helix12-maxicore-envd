@@ -40,13 +40,16 @@ var (
 	ErrSignatureMismatch        = errors.New("signature mismatch")
 	ErrNonceReuse               = errors.New("nonce reuse detected")
 	ErrMissingHeaders           = errors.New("missing required headers")
+	ErrSecretUnavailable        = errors.New("sandbox secret unavailable (lazy: not yet provisioned)")
 )
 
 // Middleware implements HMAC-V2 auth with replay-protection via nonce-cache.
 // Manus's auth.Middleware structure is mirrored 1:1.
 type Middleware struct {
 	secret     []byte
-	nonceCache *sync.Map // map[nonce]time.Time
+	secretFn   func() []byte // lazy provider; nil for static secret
+	mu         sync.Mutex    // guards lazy secret resolution
+	nonceCache *sync.Map     // map[nonce]time.Time
 	timeWindow time.Duration
 }
 
@@ -68,6 +71,45 @@ func NewMiddleware(secret []byte, timeWindow time.Duration) *Middleware {
 	}
 	go m.reapNonces()
 	return m
+}
+
+
+// NewMiddlewareLazy creates a middleware that resolves the HMAC secret on
+// first use via secretFn (result cached once non-empty). This lets the
+// runtime.v1 surface be mounted BEFORE the secret is available — required
+// because e2b TemplateCreate snapshots envd's running state during
+// template-build (possibly before /etc/maxicore/sandbox-secret is readable)
+// and resumes it later. A startup-only read would freeze envd in legacy-only
+// mode forever; lazy resolution lets the rootfs file / e2b /init env take
+// effect post-resume. Requests before the secret resolves return 401, not 404.
+func NewMiddlewareLazy(secretFn func() []byte, timeWindow time.Duration) *Middleware {
+	if timeWindow <= 0 {
+		timeWindow = 60 * time.Second
+	}
+	m := &Middleware{
+		secretFn:   secretFn,
+		nonceCache: &sync.Map{},
+		timeWindow: timeWindow,
+	}
+	go m.reapNonces()
+	return m
+}
+
+// resolveSecret returns the HMAC secret, lazily invoking secretFn on first
+// non-empty resolution and caching it. Returns nil if still unavailable.
+func (m *Middleware) resolveSecret() []byte {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	if len(m.secret) > 0 {
+		return m.secret
+	}
+	if m.secretFn != nil {
+		if sec := m.secretFn(); len(sec) > 0 {
+			m.secret = sec
+			return sec
+		}
+	}
+	return nil
 }
 
 // RequireAuth wraps an http.Handler with full HMAC verification including
@@ -127,7 +169,11 @@ func (m *Middleware) verify(r *http.Request, checkTime bool) error {
 	// reset body so downstream handlers can re-read
 	r.Body = io.NopCloser(bytes.NewReader(body))
 
-	expected := m.computeSignature(r.Method, r.URL.Path, nonce, timestamp, body)
+	secret := m.resolveSecret()
+	if len(secret) == 0 {
+		return ErrSecretUnavailable
+	}
+	expected := m.computeSignature(secret, r.Method, r.URL.Path, nonce, timestamp, body)
 	provided, err := base64.StdEncoding.DecodeString(signature)
 	if err != nil {
 		return ErrInvalidSignatureEncoding
@@ -151,9 +197,9 @@ func (m *Middleware) verifyNonce(nonce string) error {
 // computeSignature builds the HMAC-SHA256 over the canonical sign-base.
 //
 // sign-base = METHOD + "\n" + PATH + "\n" + NONCE + "\n" + TIMESTAMP + "\n" + sha256(BODY)
-func (m *Middleware) computeSignature(method, path, nonce, timestamp string, body []byte) []byte {
+func (m *Middleware) computeSignature(secret []byte, method, path, nonce, timestamp string, body []byte) []byte {
 	bodyHash := sha256.Sum256(body)
-	mac := hmac.New(sha256.New, m.secret)
+	mac := hmac.New(sha256.New, secret)
 	mac.Write([]byte(method))
 	mac.Write([]byte("\n"))
 	mac.Write([]byte(path))
